@@ -3,8 +3,8 @@ require_relative "lib/fasp_data_sharing/version"
 Gem::Specification.new do |spec|
   spec.name        = "fasp_data_sharing"
   spec.version     = FaspDataSharing::VERSION
-  spec.authors     = [ "David Roetzel" ]
-  spec.email       = [ "david@roetzel.de" ]
+  spec.authors     = [ "seriki yakub" ]
+  spec.email       = [ "qubuhub@anoxinon.de" ]
   spec.homepage    = "https://github.com/mastodon/fasp_ruby"
   spec.summary     = "Data sharing facilities for discovery FASPs"
   spec.description = "A rails enginge implementing data sharing facilities for Fediverse Auxiliary Services Providers"

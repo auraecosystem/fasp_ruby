@@ -1,0 +1,87 @@
+// ES Modules
+import { KeyHelper, SessionBuilder, SessionCipher, OMEMOAddress } from "libomemo.js";
+
+// CommonJS
+const { KeyHelper, SessionBuilder, SessionCipher, OMEMOAddress } = require("libomemo.js");
+
+// Browser (UMD)
+const { KeyHelper, SessionBuilder, SessionCipher, OMEMOAddress } = libomemo;
+
+### Setup
+
+Generate identity keys, registration ID, and PreKeys at install time:
+
+
+const registrationId = KeyHelper.generateRegistrationId();
+// Store registrationId somewhere durable and safe.
+
+const identityKeyPair = await KeyHelper.generateIdentityKeyPair();
+// Store identityKeyPair somewhere durable and safe.
+
+const preKey = await KeyHelper.generatePreKey(keyId);
+store.storePreKey(preKey.keyId, preKey.keyPair);
+
+const signedPreKey = await KeyHelper.generateSignedPreKey(identityKeyPair, keyId, version);
+store.storeSignedPreKey(signedPreKey.keyId, signedPreKey.keyPair);
+
+// Register preKeys and signedPreKey with the XMPP server
+
+### Building a Session
+
+Implement a storage interface for managing keys and session state (see `src/session/store.ts` for an example), then establish sessions:
+
+
+const store = new MyOMEMOProtocolStore();
+const address = new OMEMOAddress(recipientId, deviceId);
+// The OMEMO version is required (no default); it is the protocol's XML namespace:
+// "eu.siacs.conversations.axolotl" (XEP-0384 v0.3.0) or "urn:xmpp:omemo:2".
+const sessionBuilder = new SessionBuilder(store, address, "urn:xmpp:omemo:2");
+
+// Process a PreKey bundle from the server
+try {
+    await sessionBuilder.processPreKey({
+        registrationId: <Number>,
+        identityKey: <ArrayBuffer>,
+        signedPreKey: {
+            keyId: <Number>,
+            publicKey: <ArrayBuffer>,
+            signature: <ArrayBuffer>
+        },
+        preKey: {
+            keyId: <Number>,
+            publicKey: <ArrayBuffer>
+        }
+    });
+    // Session established — ready to encrypt
+} catch (error) {
+    // Handle identity key conflict
+}
+
+
+### Encrypting Messages
+
+
+const sessionCipher = new SessionCipher(store, address, "urn:xmpp:omemo:2");
+const ciphertext = await sessionCipher.encrypt("Hello world");
+// ciphertext -> { type: <Number>, body: <string>, kex?: <boolean> }
+// For omemo:2, `kex` indicates whether `body` is an OMEMOKeyExchange (true)
+// or a plain OMEMOAuthenticatedMessage (false).
+
+### Decrypting Messages
+
+Both decrypt methods resolve to a `DecryptResult`:
+
+const sessionCipher = new SessionCipher(store, address, "urn:xmpp:omemo:2");
+
+// Decrypt a PreKey/key-exchange message (establishes session if needed)
+try {
+    const { plaintext } = await sessionCipher.decryptPreKeyWhisperMessage(ciphertext);
+} catch (error) {
+    // Handle identity key conflict
+}
+
+// Decrypt a regular message using existing session
+const { plaintext, ratchet } = await sessionCipher.decryptWhisperMessage(ciphertext);
+// `ratchet.counter` (message index in the sender's chain) and `ratchet.key`
+// (the sender's 33-byte 0x05-prefixed ratchet public key) let you implement
+// protocol rules such as the OMEMO heartbeat.

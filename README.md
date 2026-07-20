@@ -133,7 +133,7 @@ Feedback is very welcome.
 implementing capabilities you will probably want to define your routes
 under a `:fasp` namespace:
 
-```ruby
+```rbx
 namespace :fasp do
   # ...
 end

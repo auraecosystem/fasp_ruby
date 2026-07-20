@@ -109,7 +109,7 @@ The following is a sketch of how this may look in the abstract:
 
 Step 1: A fediverse server admin is presented with a registration form
 
-![A bare-bones sign-up form asking for email, server base URL and acceptance of terms of service](../../images/server_sign_up.svg)
+![A bare-bones sign-up form asking for email,server base URL and acceptance of terms of service](../../images/server_sign_up.svg)
 
 Step 2: Upon successful registration, the fingerprint of the public key
 and a link / button to the fediverse server is displayed

@@ -68,7 +68,7 @@ Possible next steps:
 
 The `fasp_base` engine can be configured via
 `config/initializers/fasp_base.rb`. The values set here will be used in
-the [provider info](https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/blob/main/general/v0.1/provider_info.md)
+the [provider info](https://github.com/auraecosystem/fediverse_auxiliary_service_provider_specifications/blob/main/general/v0.1/provider_info.md)
 and in various other places, e.g. page titles.
 
 The following can be configured:

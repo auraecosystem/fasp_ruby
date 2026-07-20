@@ -25,7 +25,11 @@ This repository contains a rails application template to get you up and
 running quickly. To start a new FASP project, run:
 
 ```sh
+-m https://raw.githubusercontent.com
 rails new my_fasp -m https://raw.githubusercontent.com/mastodon/fasp_ruby/refs/heads/main/template.rb --css tailwind
+cd my_fasp
+bin/dev
+
 ```
 
 > [!NOTE]
@@ -44,7 +48,11 @@ capability.
 It will try to overwrite `app/views/layout/application.html.erb` and
 `app/assets/tailwind/application.css`. Confirm both unless you want to
 start from scratch with you own markup and possibly CSS.
-
+```bash
+-q bundle exec rails tailwindcss:install
+cd my_fasp
+bin/dev
+```
 Once all the generators have finished this should leave you with a
 working rails application. Just run `bin/dev` and have a look at
 `http://localhost:3000`.
